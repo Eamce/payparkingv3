@@ -76,20 +76,22 @@ class _ParkTrans extends State<ParkTrans>{
      var counter  = locCount;
      counter = counter-1;
      List<Widget> temp = [];
-    for(var q = 0; q < locCount; q++) {
+   // for(var q = 0; q < locCount; q++) {
       temp.add(
           FlatButton(
-            child: new Text(locSplit[q]),
+            child: new Text('Basement'),
+          //  child: new Text(locSplit[0]),
             onPressed: () {
               setState(() {
                 Navigator.of(context, rootNavigator: true).pop();
-                locationA = locSplit[q];
+                //get location
+                locationA = locSplit[0];
                 print(locationA);
               });
             },
           ),
       );
-      if(q >=counter){
+    //  if(q >=counter){
      // if(q >=counter){
         temp.add(
           FlatButton(
@@ -100,8 +102,8 @@ class _ParkTrans extends State<ParkTrans>{
             },
           ),
         );
-      }
-    }
+    //  }
+   // }
     return temp;
   }
 

@@ -225,7 +225,7 @@ class PayParkingDatabase {
     var client = await db;
     //return client.query('tbl_oftransactions', where: 'status = ? and location = ?'  ,whereArgs: ['1',location] );
     return client.rawQuery(
-        'SELECT * FROM tbl_oftransactions WHERE status ="1"', null);
+        'SELECT * FROM tbl_oftransactions WHERE status = "1"', null);
   }
 
   Future ofSaveUsers(
@@ -276,7 +276,7 @@ class PayParkingDatabase {
   Future ofFetchSearch(text) async {
     var client = await db;
     return client.rawQuery(
-        "SELECT * FROM tbl_oftransactions WHERE plateNumber LIKE '%$text%' AND status ='1'",
+        "SELECT * FROM tbl_oftransactions WHERE plateNumber LIKE '%$text%' AND status = '1'",
         null);
   }
 

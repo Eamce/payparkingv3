@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:payparkingv3/uploadData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -109,34 +110,35 @@ class _HistoryTransList extends State<HistoryTransList> {
   Future _onChanged(text) async {
     listStat = true;
     bool result = await DataConnectionChecker().hasConnection;
-    if (result == true) {
+ //   if (result == true) {
       var res = await db.ofFetchSearchHistory(text);
       setState(() {
         plateData2 = res;
       });
-    } else {
-      showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          // return object of type Dialog
-          return CupertinoAlertDialog(
-            title: new Text("Connection Problem"),
-            content: new Text(
-                "Please Connect to the wifi hotspot or turn the wifi on"),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+   // }
+   //  else {
+   //    showDialog(
+   //      barrierDismissible: true,
+   //      context: context,
+   //      builder: (BuildContext context) {
+   //        // return object of type Dialog
+   //        return CupertinoAlertDialog(
+   //          title: new Text("Connection Problem"),
+   //          content: new Text(
+   //              "Please Connect to the wifi hotspot or turn the wifi on"),
+   //          actions: <Widget>[
+   //            // usually buttons at the bottom of the dialog
+   //            new FlatButton(
+   //              child: new Text("Close"),
+   //              onPressed: () {
+   //                Navigator.of(context).pop();
+   //              },
+   //            ),
+   //          ],
+   //        );
+   //      },
+   //    );
+   //  }
   }
 
   @override
@@ -181,9 +183,21 @@ class _HistoryTransList extends State<HistoryTransList> {
                     new FlatButton(
                       child: new Text("Search"),
                       onPressed: () {
-                        _onChanged(_textController.text);
-                        _textController.clear();
-                        Navigator.of(context).pop();
+                        if(_textController.text.isEmpty){
+                          Fluttertoast.showToast(
+                              msg: "Empty Field",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                        }else{
+                          _onChanged(_textController.text);
+                          _textController.clear();
+                          Navigator.of(context).pop();
+                        }
+
                       },
                     ),
                     new FlatButton(
@@ -223,8 +237,16 @@ class _HistoryTransList extends State<HistoryTransList> {
                     ? ListView.builder(
                         itemCount: plateData2 == null ? 0 : plateData2.length,
                         itemBuilder: (BuildContext context, int index) {
+                          var vType = plateData2[index]["amount"];
                           var f = index;
                           f++;
+                          var vtype2='';
+                          if(vType=='100'){
+                            vtype2=' 4-wheeled';
+                          }
+                          if(vType=='50'){
+                            vtype2=' 2-wheeled';
+                          }
                           var totalAmount =
                               int.parse(plateData2[index]["penalty"]) +
                                   int.parse(plateData2[index]["amount"]);
@@ -259,23 +281,23 @@ class _HistoryTransList extends State<HistoryTransList> {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                             managerLoginReprint(
-                                                plateData[index]['uid'],
-                                                plateData[index]['checkDigit'],
-                                                plateData[index]['plateNumber'],
-                                                plateData[index]['dateTimein'],
-                                                plateData[index]['dateTimeout'],
-                                                plateData[index]['amount'],
-                                                plateData[index]['penalty'],
-                                                plateData[index]['user'],
-                                                plateData[index]['empNameIn'],
-                                                plateData[index]['outBy'],
-                                                plateData[index]['empNameOut'],
-                                                plateData[index]['location'],
-                                                plateData[index]['penaltyOT'],
-                                                plateData[index]['totalExcess'],
-                                                plateData[index]['totalCharge'],
-                                                plateData[index]['totalNoOfHours'],
-                                                plateData[index]['lostOfTicket']);
+                                                plateData2[index]['uid'],
+                                                plateData2[index]['checkDigit'],
+                                                plateData2[index]['plateNumber'],
+                                                plateData2[index]['dateTimein'],
+                                                plateData2[index]['dateTimeout'],
+                                                plateData2[index]['amount'],
+                                                plateData2[index]['penalty'],
+                                                plateData2[index]['user'],
+                                                plateData2[index]['empNameIn'],
+                                                plateData2[index]['outBy'],
+                                                plateData2[index]['empNameOut'],
+                                                plateData2[index]['location'],
+                                                plateData2[index]['penaltyOT'],
+                                                plateData2[index]['totalExcess'],
+                                                plateData2[index]['totalCharge'],
+                                                plateData2[index]['totalNoOfHours'],
+                                                plateData2[index]['lostOfTicket']);
                                           }),
                                       new FlatButton(
                                         child: new Text("Close"),
@@ -306,17 +328,17 @@ class _HistoryTransList extends State<HistoryTransList> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Text('Time In : ${plateData2[index]["dateTimein"]}', style: TextStyle(fontSize: width / 30),),
-                                        Text('Time Out : ${plateData2[index]["dateTimeout"]}', style: TextStyle(fontSize: width / 30),),
-                                        //      Text('     Entrance Fee : '+oCcy.format(int.parse(plateData2[index]["amount"])),style: TextStyle(fontSize: width/30),),
-                                        Text('Charge : ' + oCcy.format(int.parse(plateData2[index]["penalty"])), style: TextStyle(fontSize: width / 30),),
-                                        Text('Penalty : ' + oCcy.format(int.parse(plateData2[index]["penaltyOT"])), style: TextStyle(fontSize: width / 30),),
-                                        Text('Trans Code : ${plateData2[index]["checkDigit"]}', style: TextStyle(fontSize: width / 30),),
-                                        Text('In By : ${plateData2[index]["empNameIn"]}', style: TextStyle(fontSize: width / 30),),
-                                        Text('Out By : ${plateData2[index]["empNameOut"]}', style: TextStyle(fontSize: width / 30),),
-                                        Text('Location : ${plateData2[index]["location"]}', style: TextStyle(fontSize: width / 30),),
-                                        Text('Total : ' + oCcy.format(totalAmount), style: TextStyle(fontSize: width / 30),
-                                        ),
+                                    Text('Time In : ${plateData2[index]["dateTimein"]}', style: TextStyle(fontSize: width / 30)),
+                                    Text('Time Out : ${plateData2[index]["dateTimeout"]}',style: TextStyle(fontSize: width / 30),),
+                                    Text('Vehicle Type:'+vtype2,style: TextStyle(fontSize: width / 30),),
+                                    //  Text('     Entrance Fee : '+oCcy.format(int.parse(plateData[index]["amount"])),style: TextStyle(fontSize: width/30),),
+                                    Text('Charge : ' + oCcy.format(int.parse(plateData2[index]["totalCharge"])), style: TextStyle(fontSize: width / 30),),
+                                    Text('Penalty Overnight : ' + oCcy.format(int.parse(plateData2[index]["penaltyOT"])), style: TextStyle(fontSize: width / 30),),
+                                    Text('Penalty Lost of Ticket : ' + oCcy.format(int.parse(plateData2[index]["lostOfTicket"])), style: TextStyle(fontSize: width / 30),),
+                                    Text('Trans Code : ${plateData2[index]["checkDigit"]}', style: TextStyle(fontSize: width / 30),),
+                                    Text('In By : ${plateData2[index]["empNameIn"]}', style: TextStyle(fontSize: width / 30),),
+                                    Text('Out By : ${plateData2[index]["empNameOut"]}',style: TextStyle(fontSize: width / 30),),
+                                    Text('Location : ${plateData2[index]["location"]}', style: TextStyle(fontSize: width / 30),),
                                       ],
                                     ),
 //                               trailing: Icon(Icons.more_vert),
@@ -339,9 +361,17 @@ class _HistoryTransList extends State<HistoryTransList> {
                           } else {
                             cardColor = Colors.white;
                           }
+                          var vType = plateData[index]["amount"];
                           var totalAmount =
                               int.parse(plateData[index]["penalty"]) +
                                   int.parse(plateData[index]["amount"]);
+                          var vtype2='';
+                          if(vType=='100'){
+                            vtype2=' 4-wheeled';
+                          }
+                          if(vType=='50'){
+                            vtype2=' 2-wheeled';
+                          }
                           return GestureDetector(
                             onLongPress: () {
                               //CHANGESSSSSSSSSS
@@ -484,9 +514,11 @@ class _HistoryTransList extends State<HistoryTransList> {
                                       children: <Widget>[
                                         Text('Time In : ${plateData[index]["dateTimein"]}', style: TextStyle(fontSize: width / 30)),
                                         Text('Time Out : ${plateData[index]["dateTimeout"]}',style: TextStyle(fontSize: width / 30),),
+                                        Text('Vehicle Type:'+vtype2,style: TextStyle(fontSize: width / 30),),
                                         //  Text('     Entrance Fee : '+oCcy.format(int.parse(plateData[index]["amount"])),style: TextStyle(fontSize: width/30),),
                                         Text('Charge : ' + oCcy.format(int.parse(plateData[index]["totalCharge"])), style: TextStyle(fontSize: width / 30),),
-                                        Text('Penalty : ' + oCcy.format(int.parse(plateData[index]["penaltyOT"])), style: TextStyle(fontSize: width / 30),),
+                                        Text('Penalty Overnight : ' + oCcy.format(int.parse(plateData[index]["penaltyOT"])), style: TextStyle(fontSize: width / 30),),
+                                        Text('Penalty Lost of Ticket : ' + oCcy.format(int.parse(plateData[index]["lostOfTicket"])), style: TextStyle(fontSize: width / 30),),
                                         Text('Trans Code : ${plateData[index]["checkDigit"]}', style: TextStyle(fontSize: width / 30),),
                                         Text('In By : ${plateData[index]["empNameIn"]}', style: TextStyle(fontSize: width / 30),),
                                         Text('Out By : ${plateData[index]["empNameOut"]}',style: TextStyle(fontSize: width / 30),),

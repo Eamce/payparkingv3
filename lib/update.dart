@@ -105,6 +105,7 @@ class _UpdateTrans extends State<UpdateTrans>{
 
   void confirmed(){
     if(plateNoController.text == "" ){
+
     }
     else {
         saveData();
@@ -117,7 +118,7 @@ class _UpdateTrans extends State<UpdateTrans>{
     String plateNumber = plateNoController.text;
     var id = widget.id;
 
-    if(result == true){
+ //   if(result == true){
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -144,29 +145,29 @@ class _UpdateTrans extends State<UpdateTrans>{
       await db.ofUpdateTransaction(id,plateNumber);
 //      await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount,user,stat);
       locationA = "Location";
-    }
-    else{
-      showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          // return object of type Dialog
-          return CupertinoAlertDialog(
-            title: new Text("Connection Problem"),
-            content: new Text("Please Connect to the wifi hotspot or turn the wifi on"),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+    //}
+    // else{
+    //   showDialog(
+    //     barrierDismissible: true,
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       // return object of type Dialog
+    //       return CupertinoAlertDialog(
+    //         title: new Text("Connection Problem"),
+    //         content: new Text("Please Connect to the wifi hotspot or turn the wifi on"),
+    //         actions: <Widget>[
+    //           // usually buttons at the bottom of the dialog
+    //           new FlatButton(
+    //             child: new Text("Close"),
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
   }
 
   String name;
